@@ -1,40 +1,130 @@
 ﻿--CREATE DATABASE CompyuterShopDb
 --use CompyuterShopDb
 
+--Brands cədvəli yaratma və doldurma
+CREATE TABLE Brands
+(
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL UNIQUE
+);
+INSERT INTO Brands (Name)
+VALUES
+('Apple'),
+('Samsung'),
+('Xiaomi'),
+('Sony'),
+('Microsoft'),
+('Huawei'),
+('OnePlus'),
+('Dell'),
+('HP'),
+('Lenovo'),
+('Asus'),
+('Nintendo'),
+('Valve'),
+('Meta'),
+('Canon'),
+('Nikon'),
+('Fujifilm'),
+('Panasonic');
+
 --Models cədvəli yaratma və doldurma
 CREATE TABLE Models
 (
-	Id INT IDENTITY(1,1) PRIMARY KEY,
-	Name VARCHAR(50) NOT NULL,
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    BrandId INT NOT NULL,
+    Name VARCHAR(100) NOT NULL,
+    CONSTRAINT FK_Models_Brands FOREIGN KEY (BrandId) REFERENCES Brands(Id)
 );
-INSERT INTO Models (Name)
-VALUES
-('iPhone Series'),
-('Samsung Galaxy Series'),
-('Redmi Series'),
-('PlayStation Series'),
-('Xbox Series'),
-('iPhone 15 Series'),
-('Samsung S24 Series'),
-('Xiaomi 13 Series'),
-('Huawei P60 Series'),
-('OnePlus 12 Series'),
-('Dell XPS Series'),
-('MacBook Pro Series'),
-('HP Spectre Series'),
-('Lenovo ThinkPad Series'),
-('Asus ROG Series'),
-('Nintendo Switch Series'),
-('Steam Deck Series'),
-('Oculus Quest Series'),
-('Meta Quest Series'),
-('PS VR2 Series'),
-('Canon EOS Series'),
-('Nikon Z7 Series'),
-('Sony A7 Series'),
-('Fujifilm X-T5 Series'),
-('Panasonic Lumix Series');
+-- Apple
+INSERT INTO Models (BrandId, Name) VALUES
+(1,'iPhone 14 Pro'),
+(1,'iPhone 14'),
+(1,'iPhone 13 Pro'),
+(1,'iPhone 13'),
+(1,'MacBook Pro 16'),
+(1,'MacBook Air M2');
 
+-- Samsung
+INSERT INTO Models (BrandId, Name) VALUES
+(2,'Samsung Galaxy S23'),
+(2,'Samsung Galaxy S23 Ultra'),
+(2,'Samsung Galaxy S22'),
+(2,'Samsung Galaxy Note 20');
+
+-- Xiaomi
+INSERT INTO Models (BrandId, Name) VALUES
+(3,'Redmi Note 12'),
+(3,'Xiaomi 13'),
+(3,'Xiaomi 12'),
+(3,'Mi 11');
+
+-- Sony / PlayStation
+INSERT INTO Models (BrandId, Name) VALUES
+(4,'PlayStation 5'),
+(4,'PlayStation 4 Pro'),
+(4,'PS VR2');
+
+-- Microsoft / Xbox
+INSERT INTO Models (BrandId, Name) VALUES
+(5,'Xbox Series X'),
+(5,'Xbox Series S'),
+(5,'Xbox One X');
+
+-- OnePlus
+INSERT INTO Models (BrandId, Name) VALUES
+(6,'OnePlus 12'),
+(6,'OnePlus 11'),
+(6,'OnePlus 10 Pro');
+
+-- Huawei
+INSERT INTO Models (BrandId, Name) VALUES
+(7,'Huawei P60'),
+(7,'Huawei P50 Pro'),
+(7,'Huawei Mate 40');
+
+-- Dell
+INSERT INTO Models (BrandId, Name) VALUES
+(8,'Dell XPS 15'),
+(8,'Dell XPS 13'),
+(8,'Dell Inspiron 16');
+
+-- HP
+INSERT INTO Models (BrandId, Name) VALUES
+(9,'HP Spectre x360'),
+(9,'HP Envy 13'),
+(9,'HP Pavilion 15');
+
+-- Lenovo
+INSERT INTO Models (BrandId, Name) VALUES
+(10,'Lenovo ThinkPad X1'),
+(10,'Lenovo Legion 7'),
+(10,'Lenovo Yoga 9i');
+
+-- Asus
+INSERT INTO Models (BrandId, Name) VALUES
+(11,'Asus ROG Zephyrus'),
+(11,'Asus ZenBook 14'),
+(11,'Asus TUF Gaming F15');
+
+-- Nintendo / Meta / Oculus / Steam etc.
+INSERT INTO Models (BrandId, Name) VALUES
+(12,'Nintendo Switch'),
+(12,'Steam Deck'),
+(12,'Oculus Quest 2'),
+(12,'Meta Quest 3'),
+(12,'PS VR2');
+
+-- Canon / Nikon / Sony Cameras
+INSERT INTO Models (BrandId, Name) VALUES
+(13,'Canon EOS R6'),
+(13,'Canon EOS 5D Mark IV'),
+(13,'Nikon Z7 II'),
+(13,'Nikon D850'),
+(13,'Sony A7 IV'),
+(13,'Sony A7 III'),
+(13,'Fujifilm X-T5'),
+(13,'Panasonic Lumix S5');
 
 --Categories cədvəli yaratma və doldurma
 CREATE TABLE Categories
@@ -53,47 +143,45 @@ VALUES
 --Products cədvəli yaratma və doldurma
 CREATE TABLE Products
 (
-	Id INT IDENTITY(1,1) PRIMARY KEY,
-	CategoryId INT NOT NULL,
-	ModelId INT NOT NULL,
-	CONSTRAINT Fk_Produts_Categories FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
-	CONSTRAINT Fk_Produts_Models FOREIGN KEY (ModelId) REFERENCES Models(Id),
-	Name VARCHAR(50) NOT NULL,
-	Description VARCHAR(100) NOT NULL,
-	StockCount INT NOT NULL
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    CategoryId INT NOT NULL,
+    ModelId INT NOT NULL,
+    Name VARCHAR(100) NOT NULL,
+    Description VARCHAR(250) NOT NULL,
+    StockCount INT NOT NULL,
+    Price DECIMAL(10,2) NOT NULL,
+    CONSTRAINT FK_Products_Categories FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
+    CONSTRAINT FK_Products_Models FOREIGN KEY (ModelId) REFERENCES Models(Id)
 );
-ALTER TABLE Products
-ADD Price DECIMAL(10,2) NOT NULL DEFAULT 0;
+INSERT INTO Products (CategoryId, ModelId, Name, Description, StockCount, Price) VALUES
+(1,1,'iPhone 14 Pro','Apple flagship smartphone',25,1299.99),
+(1,2,'iPhone 15','Apple latest smartphone',20,1399.99),
+(1,5,'Samsung Galaxy S23','Samsung premium smartphone',30,999.50),
+(1,6,'Samsung Galaxy S24','Samsung latest smartphone',25,1099.99),
+(1,3,'Redmi Note 12','Affordable Xiaomi smartphone',50,249.90),
+(1,4,'Xiaomi 13','High-end Xiaomi smartphone',30,499.00),
+(2,7,'Dell XPS 15','High-performance laptop',15,1499.00),
+(2,8,'Dell XPS 13','Compact laptop',12,1299.00),
+(2,9,'HP Spectre x360','Convertible laptop',10,1199.00),
+(2,10,'Lenovo ThinkPad X1','Business laptop',20,1399.00),
+(3,11,'PlayStation 5','Sony gaming console',15,499.00),
+(3,12,'PS VR2','PlayStation VR headset',5,399.00),
+(3,5,'Xbox Series X','Microsoft gaming console',10,479.00),
+(3,6,'Xbox Series S','Microsoft small console',8,399.00),
+(1,13,'OnePlus 12','OnePlus flagship smartphone',22,699.00),
+(1,14,'OnePlus 11','OnePlus previous smartphone',18,599.00),
+(4,15,'Canon EOS R6','Full-frame mirrorless camera',7,2499.00),
+(4,16,'Canon EOS 5D Mark IV','Pro DSLR camera',5,2299.00),
+(4,17,'Nikon Z7 II','Professional mirrorless camera',6,2399.00),
+(4,18,'Nikon D850','Pro DSLR camera',4,2199.00),
+(4,19,'Sony A7 IV','High-end camera',9,2499.00),
+(4,20,'Sony A7 III','Camera for pros',8,1999.00),
+(3,21,'Nintendo Switch','Portable gaming console',15,299.00),
+(3,22,'Steam Deck','Handheld PC gaming',10,399.00),
+(5,23,'Oculus Quest 2','VR headset',12,299.00),
+(5,24,'Meta Quest 3','VR headset new',8,399.00);
 
-INSERT INTO Products (CategoryId, ModelId, Name, Description, StockCount)
-VALUES
-(1, 6, 'iPhone 15', 'Apple latest smartphone', 20),
-(1, 7, 'Samsung Galaxy S24', 'Samsung flagship smartphone', 25),
-(1, 8, 'Xiaomi 13', 'High-end Xiaomi smartphone', 30),
-(1, 9, 'Huawei P60', 'Huawei premium smartphone', 18),
-(1, 10, 'OnePlus 12', 'OnePlus flagship smartphone', 22),
-(2, 11, 'Dell XPS 15', 'High-performance laptop', 15),
-(2, 12, 'MacBook Pro 16', 'Apple laptop for professionals', 10),
-(2, 13, 'HP Spectre x360', 'Convertible laptop', 12),
-(2, 14, 'Lenovo ThinkPad X1', 'Business laptop', 20),
-(2, 15, 'Asus ROG Zephyrus', 'Gaming laptop', 8),
-(3, 16, 'Nintendo Switch', 'Portable gaming console', 15),
-(3, 17, 'Steam Deck', 'Handheld PC gaming', 10),
-(3, 18, 'Oculus Quest 2', 'VR headset', 12),
-(3, 19, 'Meta Quest 3', 'VR headset new', 8),
-(3, 20, 'PS VR2', 'PlayStation VR headset', 5),
-(4, 21, 'Canon EOS R6', 'Full-frame mirrorless camera', 7),
-(4, 22, 'Nikon Z7 II', 'Professional mirrorless camera', 6),
-(4, 23, 'Sony A7 IV', 'High-end camera', 9),
-(4, 24, 'Fujifilm X-T5', 'Mirrorless camera', 10),
-(4, 25, 'Panasonic Lumix S5', 'Mirrorless camera', 8);
 
-
-UPDATE Products SET Price = 1299.99 WHERE Id = 1;
-UPDATE Products SET Price = 999.50  WHERE Id = 2;
-UPDATE Products SET Price = 249.90  WHERE Id = 3;
-UPDATE Products SET Price = 499.00  WHERE Id = 4;
-UPDATE Products SET Price = 479.00  WHERE Id = 5;
 
 --Employees cədvəli yaratma və doldurma
 CREATE TABLE Employees
@@ -104,6 +192,10 @@ CREATE TABLE Employees
 	FatherName VARCHAR(50) NOT NULL,
 	Position NVARCHAR(50)
 );
+
+ALTER TABLE Employees
+ADD Salary DECIMAL(10,2) DEFAULT 1000;  
+
 ALTER TABLE Employees
 ADD BranchId INT NOT NULL DEFAULT 1;
 ALTER TABLE Employees
@@ -206,18 +298,18 @@ CREATE TABLE ProductStocks
 );
 INSERT INTO ProductStocks (ProductId, BranchId, StockCount)
 VALUES
+(6, 1, 4),(6, 2, 3),(6, 3, 3),(6, 4, 3),(6, 5, 2),
+(7, 1, 2),(7, 2, 2),(7, 3, 2),(7, 4, 2),(7, 5, 2),
+(8, 1, 3),(8, 2, 3),(8, 3, 3),(8, 4, 2),(8, 5, 1),
+(9, 1, 5),(9, 2, 5),(9, 3, 4),(9, 4, 3),(9, 5, 3),
+(10,1, 2),(10,2,2),(10,3,2),(10,4,1),(10,5,1),
+(11,1,5),(11,2,3),(11,3,3),(11,4,2),(11,5,2),
+(12,1,2),(12,2,2),(12,3,2),(12,4,2),(12,5,2),
 (1, 1, 5),(1, 2, 5),(1, 3, 5),(1, 4, 3),(1, 5, 2),
 (2, 1, 8),(2, 2, 5),(2, 3, 5),(2, 4, 4),(2, 5, 3),
 (3, 1, 10),(3, 2, 5),(3, 3, 5),(3, 4, 5),(3, 5, 5),
 (4, 1, 5),(4, 2, 4),(4, 3, 3),(4, 4, 3),(4, 5, 3),
 (5, 1, 6),(5, 2, 5),(5, 3, 4),(5, 4, 4),(5, 5, 3),
---(6, 1, 4),(6, 2, 3),(6, 3, 3),(6, 4, 3),(6, 5, 2),
---(7, 1, 2),(7, 2, 2),(7, 3, 2),(7, 4, 2),(7, 5, 2),
---(8, 1, 3),(8, 2, 3),(8, 3, 3),(8, 4, 2),(8, 5, 1),
---(9, 1, 5),(9, 2, 5),(9, 3, 4),(9, 4, 3),(9, 5, 3),
---(10,1, 2),(10,2,2),(10,3,2),(10,4,1),(10,5,1),
---(11,1,5),(11,2,3),(11,3,3),(11,4,2),(11,5,2),
---(12,1,2),(12,2,2),(12,3,2),(12,4,2),(12,5,2),
 (13,1,3),(13,2,3),(13,3,3),(13,4,2),(13,5,1),
 (14,1,5),(14,2,5),(14,3,4),(14,4,3),(14,5,3),
 (15,1,2),(15,2,2),(15,3,2),(15,4,1),(15,5,1),
@@ -291,3 +383,239 @@ SELECT
 FROM Products p
 LEFT JOIN Models m ON p.ModelId = m.Id
 ORDER BY m.Name, p.Name;
+
+--Adi Murad olan isci melumatlari 
+SELECT *
+FROM Employees
+WHERE Name = 'Murad';
+
+--Yaşı 25-dən kiçik olan işçilərin siyahısına baxmaq üçün sorğu
+SELECT *
+FROM Employees
+WHERE Age < 25
+ORDER BY Age, Name; --prostu siralamaq ucun kicik yasdan boyuye, ad elifba sirasi
+
+--Hər modeldən neçə məhsulun olduğunu tapın
+SELECT 
+    Models.Id AS ModelId,
+    Models.Name AS ModelName,
+    COUNT(Products.Id) AS ProductCount
+FROM Models
+LEFT JOIN Products ON Products.ModelId = Models.Id
+GROUP BY Models.Id, Models.Name
+ORDER BY ProductCount DESC;
+
+--Hər markada hər modelin neçə məhsulu olduğunu tapın
+SELECT 
+    b.Name AS Brand,
+    m.Name AS Model,
+    COUNT(p.Id) AS ProductCount
+FROM Brands b
+JOIN Models m ON m.BrandId = b.Id
+LEFT JOIN Products p ON p.ModelId = m.Id
+GROUP BY b.Name, m.Name
+ORDER BY b.Name, m.Name;
+
+--Hər filial üzrə aylıq satış məbləğinin hesablanması
+SELECT 
+    br.Name AS BranchName,
+    YEAR(s.SaleDate) AS SaleYear,
+    MONTH(s.SaleDate) AS SaleMonth,
+    SUM(s.UnitPrice * s.Quantity) AS MonthlyRevenue
+FROM Sales s
+JOIN Employees e ON s.EmployeeId = e.Id
+JOIN Branches br ON e.BranchId = br.Id
+GROUP BY br.Name, YEAR(s.SaleDate), MONTH(s.SaleDate)
+ORDER BY br.Name, SaleYear, SaleMonth;
+
+--Ay ərzində ən çox satış olunan model
+WITH MonthlySales AS
+(
+    SELECT 
+        m.Name AS ModelName,
+        YEAR(s.SaleDate) AS SaleYear,
+        MONTH(s.SaleDate) AS SaleMonth,
+        SUM(s.Quantity) AS TotalSold
+    FROM Sales s
+    JOIN Products p ON s.ProductId = p.Id
+    JOIN Models m ON p.ModelId = m.Id
+    GROUP BY m.Name, YEAR(s.SaleDate), MONTH(s.SaleDate)
+)
+SELECT *
+FROM MonthlySales ms
+WHERE TotalSold = (
+    SELECT MAX(TotalSold)
+    FROM MonthlySales ms2
+    WHERE ms2.SaleYear = ms.SaleYear AND ms2.SaleMonth = ms.SaleMonth
+)
+ORDER BY SaleYear, SaleMonth;
+
+
+
+
+--Ay ərzində ən az satış edən işçi
+WITH EmployeeMonthlySales AS
+(
+    SELECT 
+        e.Id AS EmployeeId,
+        e.Name + ' ' + e.Surname AS EmployeeName,
+        YEAR(s.SaleDate) AS SaleYear,
+        MONTH(s.SaleDate) AS SaleMonth,
+        SUM(s.UnitPrice * s.Quantity) AS TotalRevenue
+    FROM Sales s
+    JOIN Employees e ON s.EmployeeId = e.Id
+    GROUP BY e.Id, e.Name, e.Surname, YEAR(s.SaleDate), MONTH(s.SaleDate)
+)
+SELECT *
+FROM EmployeeMonthlySales ems
+WHERE TotalRevenue = (
+    SELECT MIN(TotalRevenue)
+    FROM EmployeeMonthlySales ems2
+    WHERE ems2.SaleYear = ems.SaleYear AND ems2.SaleMonth = ems.SaleMonth
+)
+ORDER BY SaleYear, SaleMonth;
+
+
+
+
+--Ay ərzində 3000-dən çox satış edən işçilərin siyahısı
+SELECT 
+    e.Id AS EmployeeId,
+    e.Name + ' ' + e.Surname AS EmployeeName,
+    YEAR(s.SaleDate) AS SaleYear,
+    MONTH(s.SaleDate) AS SaleMonth,
+    SUM(s.UnitPrice * s.Quantity) AS TotalRevenue
+FROM Sales s
+JOIN Employees e ON s.EmployeeId = e.Id
+GROUP BY e.Id, e.Name, e.Surname, YEAR(s.SaleDate), MONTH(s.SaleDate)
+HAVING SUM(s.UnitPrice * s.Quantity) > 3000
+ORDER BY SaleYear, SaleMonth, TotalRevenue DESC;
+
+--İşcilərin ad soyad və ata adlarını eyni xanada göstərən sorğu 
+SELECT 
+    Name + ' ' + Surname + ' ' + FatherName AS FullName
+FROM Employees;
+
+--Məhsulun ad və qarşısında adın uzunluğunu göstərən sorğu 
+SELECT 
+    Name AS ProductName,
+    LEN(Name) AS NameLength
+FROM Products;
+
+--Ən bahalı Məhsulu göstərən sorğu 
+SELECT *
+FROM Products
+WHERE Price = (SELECT MAX(Price) FROM Products);
+
+-- Ən bahalı və ən ucuz məhsulu eyni nəticədə göstərmək
+SELECT 'Expensive' AS Type, *
+FROM Products
+WHERE Price = (SELECT MAX(Price) FROM Products)
+UNION ALL
+SELECT 'Cheap' AS Type, *
+FROM Products
+WHERE Price = (SELECT MIN(Price) FROM Products);
+
+--Məhsulları qiymətinə görə kateqoriyalara bölme
+SELECT 
+    Name AS ProductName,
+    Price,
+    CASE 
+        WHEN Price < 1000 THEN 'Münasib'
+        WHEN Price BETWEEN 1000 AND 2400 THEN 'Orta qiymətli'
+        ELSE 'Baha'
+    END AS PriceCategory
+FROM Products
+ORDER BY Price DESC;
+
+--Cari ayda olan bütün satışların cəmi
+SELECT SUM(UnitPrice * Quantity) AS TotalRevenueThisMonth
+FROM Sales
+WHERE YEAR(SaleDate) = YEAR(GETDATE())
+  AND MONTH(SaleDate) = MONTH(GETDATE());
+
+
+--Cari ayda ən çox satış edən işçinin məlumatlarını çıxaran sorğu
+WITH EmployeeMonthlySales AS
+(
+    SELECT 
+        e.Id,
+        e.Name,
+        e.Surname,
+        e.FatherName,
+        SUM(s.Quantity) AS TotalSold
+    FROM Sales s
+    JOIN Employees e ON s.EmployeeId = e.Id
+    WHERE YEAR(s.SaleDate) = YEAR(GETDATE())
+      AND MONTH(s.SaleDate) = MONTH(GETDATE())
+    GROUP BY e.Id, e.Name, e.Surname, e.FatherName
+)
+SELECT *
+FROM EmployeeMonthlySales
+WHERE TotalSold = (SELECT MAX(TotalSold) FROM EmployeeMonthlySales);
+
+--Cari ayda ən çox qazanc gətirən işçinin məlumatlarını çıxaran sorğu 
+WITH EmployeeRevenue AS
+(
+    SELECT 
+        e.Id,
+        e.Name,
+        e.Surname,
+        e.FatherName,
+        e.Salary,
+        SUM(s.UnitPrice * s.Quantity) AS TotalRevenue
+    FROM Sales s
+    JOIN Employees e ON s.EmployeeId = e.Id
+    WHERE YEAR(s.SaleDate) = YEAR(GETDATE())
+      AND MONTH(s.SaleDate) = MONTH(GETDATE())
+    GROUP BY e.Id, e.Name, e.Surname, e.FatherName, e.Salary
+)
+SELECT *
+FROM EmployeeRevenue
+WHERE TotalRevenue = (SELECT MAX(TotalRevenue) FROM EmployeeRevenue);
+
+
+--Ən çox satış edən işçinin cari ay maaşını 50% artırın
+
+UPDATE Employees
+SET Salary = 1000
+WHERE Salary IS NULL;
+WITH EmployeeMonthlySales AS
+(
+    SELECT 
+        e.Id,
+        SUM(s.Quantity) AS TotalSold
+    FROM Sales s
+    JOIN Employees e ON s.EmployeeId = e.Id
+    WHERE YEAR(s.SaleDate) = YEAR(GETDATE())
+      AND MONTH(s.SaleDate) = MONTH(GETDATE())
+    GROUP BY e.Id
+)
+UPDATE e
+SET e.Salary = e.Salary * 1.5
+FROM Employees e
+JOIN EmployeeMonthlySales ems ON e.Id = ems.Id
+WHERE ems.TotalSold = (
+    SELECT MAX(TotalSold) FROM EmployeeMonthlySales
+);
+
+
+--Imenni o isci
+WITH EmployeeRevenue AS
+(
+    SELECT 
+        e.Id,
+        e.Name,
+        e.Surname,
+        e.FatherName,
+        e.Salary,
+        SUM(s.UnitPrice * s.Quantity) AS TotalRevenue
+    FROM Sales s
+    JOIN Employees e ON s.EmployeeId = e.Id
+    WHERE YEAR(s.SaleDate) = YEAR(GETDATE())
+      AND MONTH(s.SaleDate) = MONTH(GETDATE())
+    GROUP BY e.Id, e.Name, e.Surname, e.FatherName, e.Salary
+)
+SELECT *
+FROM EmployeeRevenue
+WHERE TotalRevenue = (SELECT MAX(TotalRevenue) FROM EmployeeRevenue);
